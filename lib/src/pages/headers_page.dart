@@ -1,5 +1,5 @@
-import 'package:background_custom_painters/src/widgets/headers.dart';
 import 'package:flutter/material.dart';
+import '../widgets/widgets.dart';
 
 class HeadersPage extends StatelessWidget {
   const HeadersPage({super.key});
