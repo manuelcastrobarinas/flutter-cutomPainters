@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class AnimationsPage extends StatelessWidget {
   const AnimationsPage({super.key});
@@ -31,7 +32,19 @@ class _SquareAnimatedState extends State<SquareAnimated> with SingleTickerProvid
       vsync: this, duration: const Duration(milliseconds: 4000)
     );
 
-    rotation = Tween(begin: 0.0, end: 2.0).animate(animationController);
+    //rotation = Tween(begin: 0.0, end: 2.0 * math.pi).animate(animationController);// animaciones lineales
+      rotation = Tween(begin: 0.0, end: 2.0 * math.pi).animate(
+        CurvedAnimation(
+        parent: animationController, 
+        curve: Curves.easeOut
+      )); // utiliza Una curva blesier para crear diferentes efectos de animacion
+
+    animationController.addListener(() {
+      print("status controller ${animationController.status}");
+      if(animationController.status == AnimationStatus.completed) {
+        animationController.reverse();
+      }
+     });
 
     super.initState();
   }
