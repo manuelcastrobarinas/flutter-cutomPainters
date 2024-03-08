@@ -25,6 +25,10 @@ class _SquareAnimatedState extends State<SquareAnimated> with SingleTickerProvid
 
   late AnimationController animationController;
   late Animation<double> rotation;
+  late Animation<double> opacity;
+  late Animation<double> opacityOut;
+  late Animation<double> moveRight;
+  late Animation<double> zoom;
  
   @override
   void initState() {
@@ -33,14 +37,21 @@ class _SquareAnimatedState extends State<SquareAnimated> with SingleTickerProvid
     );
 
     //rotation = Tween(begin: 0.0, end: 2.0 * math.pi).animate(animationController);// animaciones lineales
-      rotation = Tween(begin: 0.0, end: 2.0 * math.pi).animate(
-        CurvedAnimation(
-        parent: animationController, 
-        curve: Curves.easeOut
-      )); // utiliza Una curva blesier para crear diferentes efectos de animacion
+    rotation = Tween(begin: 0.0, end: 2.0 * math.pi).animate(
+      CurvedAnimation(
+      parent: animationController, 
+      curve: Curves.easeOut
+    )); // utiliza Una curva blesier para crear diferentes efectos de animacion
+
+    opacity     = Tween(begin: 0.1, end: 1.0).animate(animationController);
+    opacityOut  = Tween(begin: 0.7, end: 1.0).animate(animationController);
+    moveRight = Tween(begin: 0.0, end: 200.0).animate(CurvedAnimation(parent: animationController, curve: Curves.bounceInOut));
+    zoom      = Tween(begin: 0.0, end: 2.0).animate(CurvedAnimation(
+      parent: animationController, 
+      curve : Curves.easeInCubic
+    ));
 
     animationController.addListener(() {
-      print("status controller ${animationController.status}");
       if(animationController.status == AnimationStatus.completed) {
         animationController.reverse();
       }
@@ -60,10 +71,23 @@ class _SquareAnimatedState extends State<SquareAnimated> with SingleTickerProvid
     animationController.forward(); //inicie la animacion
     return AnimatedBuilder(
       animation: animationController,
+      child: const _Rectangle(),
       builder: (BuildContext context, Widget? child) {
-        return Transform.rotate(
-          angle: rotation.value, //aqui se pone la rotacion que definimos
-          child: const _Rectangle(),
+        return Transform.translate(
+          offset: Offset(moveRight.value, 0),
+          child: Transform.rotate(
+            angle: rotation.value, //aqui se pone la rotacion que definimos
+            child: Opacity(
+              opacity: opacity.value,
+              child: Transform.scale(
+                scale: zoom.value,
+                child: Opacity(
+                  opacity: opacityOut.value,
+                  child: child
+                )
+              ),
+            )
+          ),
         );
       },
     );
