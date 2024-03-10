@@ -7,3 +7,4 @@ export 'header_diagonal_square.dart';
 export 'header_waves.dart';
 export 'headers_square.dart';
 export 'header_haves_gradient.dart';
+export 'slideshow.dart';
